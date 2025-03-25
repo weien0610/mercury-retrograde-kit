@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>水逆生存包</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 登入頁面 - 新增多種登入選項 -->
+        <div id="login-page" class="page active">
+            <div class="login-container">
+                <div class="login-header">
+                    <h1>水逆生存包</h1>
+                    <h2>靜心補光包</h2>
+                </div>
+                <div class="login-options">
+                    <button id="google-login" class="social-login-button google-btn">
+                        <i class="fab fa-google"></i> 使用Google登入
+                    </button>
+                    <button id="facebook-login" class="social-login-button facebook-btn">
+                        <i class="fab fa-facebook-f"></i> 使用Facebook登入
+                    </button>
+                    <button id="guest-login" class="social-login-button guest-btn">
+                        <i class="fas fa-user-secret"></i> 遊客登入
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 出生日期設定頁面 - 新增 -->
+        <div id="birthdate-page" class="page">
+            <div class="birthdate-container">
+                <div class="birthdate-header">
+                    <h2>設定您的出生日期</h2>
+                    <p>我們將根據您的出生日期計算五行屬性，提供個人化推薦</p>
+                </div>
+                <div class="birthdate-form">
+                    <div class="form-group">
+                        <label for="birth-date-input">出生日期</label>
+                        <input type="date" id="birth-date-input" name="birth-date-input">
+                    </div>
+                    <button id="birthdate-submit" class="birthdate-button">
+                        <i class="fas fa-magic"></i> 開始使用
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 每日抽卡頁面 - 新增 -->
+        <div id="daily-card-page" class="page">
+            <div class="daily-card-container">
+                <h2>今日咒語</h2>
+                <p>點擊卡片獲取今日專屬咒語</p>
+                
+                <!-- 卡片容器 -->
+                <div class="daily-card-wrapper">
+                    <div class="daily-card" id="daily-card-1">
+                        <!-- 卡片正面 -->
+                        <div class="daily-card-front">
+                            <div class="card-number">今日</div>
+                            <div class="card-icon"><i class="fas fa-magic"></i></div>
+                            <p>點擊卡片查看今日咒語</p>
+                        </div>
+                        
+                        <!-- 卡片背面 -->
+                        <div class="daily-card-back">
+                            <div class="card-content" id="daily-card-content">
+                                <!-- 動態生成的咒語內容 -->
+                            </div>
+                            
+                            <div class="card-actions">
+                                <button class="share-button"><i class="fas fa-share-alt"></i> 分享</button>
+                                <button class="save-button"><i class="fas fa-bookmark"></i> 儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 繼續按鈕 -->
+                <div>
+                    <button class="continue-button" id="continue-to-main">
+                        <i class="fas fa-chevron-right"></i> 繼續
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主要應用界面 -->
+        <div id="app-interface" class="hidden">
+            <header>
+                <h1>水逆生存包</h1>
+                <h2>靜心補光包</h2>
+            </header>
+            
+            <div class="content-wrapper">
+                <div id="main-page" class="page">
+                    <div class="today-recommendation">
+                        <h3>今日專屬推薦</h3>
+                        <div class="recommendation-card">
+                            <div class="recommendation-item">
+                                <i class="fas fa-fire"></i>
+                                <p>蠟燭：<span id="today-candle">木系果凍蠟燭</span></p>
+                            </div>
+                            <div class="recommendation-item">
+                                <i class="fas fa-music"></i>
+                                <p>音樂：<span id="today-music">432Hz冥想音樂</span></p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="item-card" onclick="showPage('candle-music-page')">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="item-info">
+                            <h3>靜心蠟燭與音樂</h3>
+                            <p>今日專屬靜心療癒</p>
+                        </div>
+                        <i class="fas fa-chevron-right nav-arrow"></i>
+                    </div>
+                    
+                    <div class="item-card" onclick="showPage('mantra-page')">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        <div class="item-info">
+                            <h3>防水逆咒語卡</h3>
+                            <p>查看今日咒語卡</p>
+                        </div>
+                        <i class="fas fa-chevron-right nav-arrow"></i>
+                    </div>
+                    
+                    <div class="item-card" onclick="showPage('profile-page')">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="item-info">
+                            <h3>個人檔案</h3>
+                            <p>設定您的五行資訊</p>
+                        </div>
+                        <i class="fas fa-chevron-right nav-arrow"></i>
+                    </div>
+                </div>
+                
+                <!-- 整合後的靜心蠟燭與音樂頁面 -->
+                <div id="candle-music-page" class="page">
+                    <div class="page-header">
+                        <button class="back-button" onclick="showPage('main-page')"><i class="fas fa-arrow-left"></i></button>
+                        <h2>今日靜心療癒</h2>
+                    </div>
+                    
+                    <div class="candle-music-container">
+                        <!-- 蠟燭區域 -->
+                        <div class="candle-wrapper">
+                            <div class="candle-image-container">
+                                <img id="candle-image" src="" alt="蠟燭圖片" class="candle-img">
+                            </div>
+                            <div class="candle-info">
+                                <p>依您的五行：<span id="element-type">木</span> - 建議香味：<span id="fragrance">薰衣草（安神）</span></p>
+                                <p>配色寓意：<span id="candle-meaning">綠色代表生長與希望，具有平衡與調和能量。</span></p>
+                            </div>
+                        </div>
+                        
+                        <!-- 音樂播放器和計時器合併 -->
+                        <div class="music-timer-container">
+                            <div class="music-player">
+                                <div class="player-info">
+                                    <div class="frequency-circle">
+                                        <span id="current-frequency">432Hz</span>
+                                    </div>
+                                    <div class="track-details">
+                                        <h4 id="track-name">宇宙協調冥想</h4>
+                                        <p id="track-description">讓你與宇宙頻率協調，安定心神</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="sound-wave">
+                                    <i class="fas fa-music"></i>
+                                    <span class="wave-line"></span>
+                                    <span class="wave-line"></span>
+                                    <span class="wave-line"></span>
+                                </div>
+                                
+                                <audio id="audio-player" preload="auto" loop>
+                                    <source src="audio/432hz.mp3" type="audio/mpeg" id="audio-source">
+                                    您的瀏覽器不支持音頻元素。
+                                </audio>
+                            </div>
+                            
+                            <div class="timer-container">
+                                <h3>靜心計時器</h3>
+                                <div class="timer">
+                                    <span id="timer-display">15:00</span>
+                                </div>
+                                <div class="timer-controls">
+                                    <button id="start-timer"><i class="fas fa-play"></i> 開始</button>
+                                    <button id="pause-timer"><i class="fas fa-pause"></i> 暫停</button>
+                                    <button id="reset-timer"><i class="fas fa-redo"></i> 重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 咒語卡頁面 - 修改為顯示今日抽到的卡片 -->
+                <div id="mantra-page" class="page">
+                    <div class="page-header">
+                        <button class="back-button" onclick="showPage('main-page')"><i class="fas fa-arrow-left"></i></button>
+                        <h2>今日咒語</h2>
+                    </div>
+                    
+                    <div class="mantra-container">
+                        <div class="today-mantra-card">
+                            <div class="mantra-card">
+                                <div class="card-content centered" id="today-mantra-content">
+                                    <!-- 動態顯示今日抽到的咒語 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 個人檔案頁面 -->
+                <div id="profile-page" class="page">
+                    <div class="page-header">
+                        <button class="back-button" onclick="showPage('main-page')"><i class="fas fa-arrow-left"></i></button>
+                        <h2>個人檔案</h2>
+                    </div>
+                    
+                    <div class="profile-container">
+                        <div class="profile-form">
+                            <div class="form-group">
+                                <label for="birth-date">出生日期</label>
+                                <input type="date" id="birth-date" name="birth-date">
+                            </div>
+                            
+                            <div class="form-result">
+                                <h3>您的五行屬性</h3>
+                                <div class="element-result">
+                                    <div class="element-icon">
+                                        <i class="fas fa-tree"></i>
+                                    </div>
+                                    <div class="element-info">
+                                        <h4>主要：<span id="main-element">木</span></h4>
+                                        <p>建議蠟燭顏色：<span id="candle-color">綠色</span></p>
+                                        <p>建議精油：<span id="oil-recommendation">佛手柑</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="save-profile"><i class="fas fa-save"></i> 儲存設定</button>
+                            <button class="logout-button" id="logout-btn"><i class="fas fa-sign-out-alt"></i> 登出</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="bottom-nav">
+                <button class="nav-item active" onclick="showPage('main-page')">
+                    <i class="fas fa-home"></i>
+                    <span>首頁</span>
+                </button>
+                <button class="nav-item" onclick="showPage('candle-music-page')">
+                    <i class="fas fa-fire"></i>
+                    <span>靜心療癒</span>
+                </button>
+                <button class="nav-item" onclick="showPage('mantra-page')">
+                    <i class="fas fa-spa"></i>
+                    <span>咒語卡</span>
+                </button>
+                <button class="nav-item" onclick="showPage('profile-page')">
+                    <i class="fas fa-user"></i>
+                    <span>檔案</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> 
