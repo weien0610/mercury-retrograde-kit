@@ -9,9 +9,9 @@ const candleImages = {
 
 // 音樂檔案路徑
 const musicFiles = [
-    'audio/432hz.mp3',
-    'audio/528hz.mp3', 
-    'audio/639hz.mp3'
+    'audio/432Hz.mp3',
+    'audio/528Hz.mp3', 
+    'audio/639Hz.mp3'
 ];
 
 // 全局變量
@@ -270,7 +270,7 @@ function getRandomMantra() {
     return mantras[Math.floor(Math.random() * mantras.length)];
 }
 
-// 開始隨機播放音樂
+// 開始準備音樂播放
 function startRandomMusic() {
     const frequencies = ['432Hz', '528Hz', '639Hz'];
     const randomFreq = frequencies[Math.floor(Math.random() * frequencies.length)];
@@ -284,27 +284,40 @@ function startRandomMusic() {
     const audioSource = document.getElementById('audio-source');
     
     if (audioSource) {
-        // 顯示正在加載的音頻文件路徑，用於調試
-        const audioFilePath = `audio/${randomFreq.toLowerCase()}.mp3`;
-        console.log("正在加載音頻: " + audioFilePath);
+        // 修正文件名大小寫問題
+        // 根據您的實際文件名調整這裡
+        let audioFilePath;
+        switch(randomFreq) {
+            case '432Hz':
+                audioFilePath = 'audio/432Hz.mp3'; // 注意這裡 'H' 大寫
+                break;
+            case '528Hz':
+                audioFilePath = 'audio/528Hz.mp3'; // 注意這裡 'H' 大寫
+                break;
+            case '639Hz':
+                audioFilePath = 'audio/639Hz.mp3'; // 注意這裡 'H' 大寫
+                break;
+            default:
+                audioFilePath = 'audio/432Hz.mp3'; // 默認值
+        }
+        console.log("準備音頻: " + audioFilePath);
         
         audioSource.src = audioFilePath;
-        
-        // 設置循環播放
         audioPlayer.loop = true;
-        
-        // 確保音頻已加載
         audioPlayer.load();
         
-        // 添加錯誤處理
-        audioPlayer.onerror = function(e) {
-            console.error("音頻加載錯誤:", e);
-            console.error("無法加載: " + audioSource.src);
-        };
-        
-        // 讓音波圖標可點擊來播放音樂
+        // 獲取音波元素並添加明確的提示
         const soundWave = document.querySelector('.sound-wave');
         if (soundWave) {
+            // 添加點擊提示文字
+            const playHint = document.createElement('div');
+            playHint.textContent = '點擊播放音樂';
+            playHint.style.fontSize = '0.8rem';
+            playHint.style.marginTop = '5px';
+            playHint.style.color = '#6e8efb';
+            soundWave.appendChild(playHint);
+            
+            // 設置音波樣式
             soundWave.style.cursor = 'pointer';
             soundWave.title = '點擊播放音樂';
             
@@ -312,34 +325,29 @@ function startRandomMusic() {
             const newSoundWave = soundWave.cloneNode(true);
             soundWave.parentNode.replaceChild(newSoundWave, soundWave);
             
-            // 添加新的事件監聽器
+            // 添加新的點擊事件
             newSoundWave.addEventListener('click', function() {
+                // 播放音樂
                 audioPlayer.play()
                     .then(() => {
+                        // 成功播放後改變樣式
                         newSoundWave.classList.add('playing');
+                        // 移除提示文字
+                        const hint = newSoundWave.querySelector('div');
+                        if (hint) hint.remove();
                     })
-                    .catch(err => console.error("播放失敗:", err));
+                    .catch(err => {
+                        console.error("播放失敗:", err);
+                        alert("音樂播放失敗，請確認您的瀏覽器支持音頻播放。");
+                    });
             });
         }
         
-        // 嘗試自動播放
-        const playPromise = audioPlayer.play();
-        
-        // 處理播放承諾
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                // 自動播放成功
-                console.log("音樂播放成功");
-                // 啟動音波動畫
-                document.querySelector('.sound-wave').classList.add('playing');
-            })
-            .catch(error => {
-                // 自動播放被阻止 - 這是預期的，因為大多數瀏覽器不允許自動播放
-                console.log("自動播放被阻止 (這是正常的):", error);
-                console.log("請點擊音波圖標播放音樂");
-                document.querySelector('.sound-wave').classList.remove('playing');
-            });
-        }
+        // 仍然嘗試自動播放，但預期會失敗
+        audioPlayer.play().catch(error => {
+            // 自動播放被阻止 - 這是預期的
+            console.log("自動播放被阻止，請點擊音波圖標手動播放。");
+        });
     }
 }
 
