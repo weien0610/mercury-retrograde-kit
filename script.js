@@ -284,7 +284,11 @@ function startRandomMusic() {
     const audioSource = document.getElementById('audio-source');
     
     if (audioSource) {
-        audioSource.src = `audio/${randomFreq.toLowerCase()}.mp3`;
+        // 顯示正在加載的音頻文件路徑，用於調試
+        const audioFilePath = `audio/${randomFreq.toLowerCase()}.mp3`;
+        console.log("正在加載音頻: " + audioFilePath);
+        
+        audioSource.src = audioFilePath;
         
         // 設置循環播放
         audioPlayer.loop = true;
@@ -292,7 +296,33 @@ function startRandomMusic() {
         // 確保音頻已加載
         audioPlayer.load();
         
-        // 播放音頻
+        // 添加錯誤處理
+        audioPlayer.onerror = function(e) {
+            console.error("音頻加載錯誤:", e);
+            console.error("無法加載: " + audioSource.src);
+        };
+        
+        // 讓音波圖標可點擊來播放音樂
+        const soundWave = document.querySelector('.sound-wave');
+        if (soundWave) {
+            soundWave.style.cursor = 'pointer';
+            soundWave.title = '點擊播放音樂';
+            
+            // 移除現有的事件監聽器
+            const newSoundWave = soundWave.cloneNode(true);
+            soundWave.parentNode.replaceChild(newSoundWave, soundWave);
+            
+            // 添加新的事件監聽器
+            newSoundWave.addEventListener('click', function() {
+                audioPlayer.play()
+                    .then(() => {
+                        newSoundWave.classList.add('playing');
+                    })
+                    .catch(err => console.error("播放失敗:", err));
+            });
+        }
+        
+        // 嘗試自動播放
         const playPromise = audioPlayer.play();
         
         // 處理播放承諾
@@ -304,8 +334,9 @@ function startRandomMusic() {
                 document.querySelector('.sound-wave').classList.add('playing');
             })
             .catch(error => {
-                // 自動播放被阻止
-                console.log("自動播放被阻止:", error);
+                // 自動播放被阻止 - 這是預期的，因為大多數瀏覽器不允許自動播放
+                console.log("自動播放被阻止 (這是正常的):", error);
+                console.log("請點擊音波圖標播放音樂");
                 document.querySelector('.sound-wave').classList.remove('playing');
             });
         }
